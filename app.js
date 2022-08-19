@@ -4,8 +4,8 @@ const MEXC_URL = 'https://www.mexc.com/open/api/v2/market/ticker';
 const GATE_URL = 'https://data.gateapi.io/api2/1/tickers';
 const OKX_URL = 'https://www.okx.com/api/v5/market/tickers?instType=SPOT';
 
-//BYBIT
-// const BYBIT_URL = 'https://api.bytick.com/spot/v1/symbols';
+//BITMART
+const BITMART_URL = 'https://api-cloud.bitmart.com/spot/v1/ticker';
 
 
 const getDataBtn = document.querySelector('#getData');
@@ -16,6 +16,7 @@ let HUOBI_DATA = null;
 let MEXC_DATA = null;
 let GATE_DATA = null;
 let OKX_DATA = null;
+let BITMART_DATA = null;
 
 let tokenList = [];
 let positionList = [];
@@ -58,7 +59,11 @@ sendRequest(GATE_URL).then( data => {GATE_DATA = gateDataNormalise(data);} )
     .catch( (err) => console.log(err) );
 sendRequest(OKX_URL).then( data => {OKX_DATA = okxDataNormalise(data.data); } )
     .catch( (err) => console.log(err) );
+sendRequest(BITMART_URL).then( data => {BITMART_DATA = bitmartDataNormalise(data.data.tickers);} )
+    .catch( (err) => console.log(err) );
 }
+
+
 
 
 
@@ -110,6 +115,26 @@ function okxDataNormalise(data) {
     return obj;
 }
 
+function bitmartDataNormalise(data) {
+    let obj = new Object();
+
+    for (let i = data.length - 1; i > -1; i--) {
+        if (!data[i].symbol.includes('USDT')) {
+            data.splice(i, 1);
+        }
+    }
+
+    for (let i = 0; i < data.length; i++) {
+        let coin = data[i].symbol.replace('USDT', '').replace('_', '');
+        obj[coin] = {
+            ask: data[i].best_ask,
+            bid: data[i].best_bid
+        }
+        tokenList.push(coin);
+    }
+
+    return obj;
+}
 
 function dataAnalis(pairs) {
 
@@ -158,7 +183,8 @@ function askPriceAnalise()  {
             HUOBI: HUOBI_DATA[tokenList[i]] ? +HUOBI_DATA[tokenList[i]].ask : 99999,
             MEXC: MEXC_DATA[tokenList[i]] ? +MEXC_DATA[tokenList[i]].ask : 99999,
             GATE: GATE_DATA[tokenList[i]] ? +GATE_DATA[tokenList[i]].ask : 99999,
-            OKX: OKX_DATA[tokenList[i]] ? +OKX_DATA[tokenList[i]].ask : 99999
+            OKX: OKX_DATA[tokenList[i]] ? +OKX_DATA[tokenList[i]].ask : 99999,
+            BITMART: BITMART_DATA[tokenList[i]] ? +BITMART_DATA[tokenList[i]].ask : 99999
         }
     }  
 
@@ -189,6 +215,11 @@ function askPriceAnalise()  {
                 OKX: list.OKX
             }
         }
+        if (min[Object.keys(min)[0]] > list.BITMART) {
+            min = {
+                BITMART: list.BITMART
+            }
+        }
 
         askPrices[coin] = min;
     }
@@ -204,7 +235,8 @@ function bidPriceAnalise()  {
             HUOBI: HUOBI_DATA[tokenList[i]] ? +HUOBI_DATA[tokenList[i]].bid : 0,
             MEXC: MEXC_DATA[tokenList[i]] ? +MEXC_DATA[tokenList[i]].bid : 0,
             GATE: GATE_DATA[tokenList[i]] ? +GATE_DATA[tokenList[i]].ask : 0,
-            OKX: OKX_DATA[tokenList[i]] ? +OKX_DATA[tokenList[i]].ask : 0
+            OKX: OKX_DATA[tokenList[i]] ? +OKX_DATA[tokenList[i]].ask : 0,
+            BITMART: BITMART_DATA[tokenList[i]] ? +BITMART_DATA[tokenList[i]].ask : 0
         }
     }  
 
@@ -233,6 +265,11 @@ function bidPriceAnalise()  {
         if (max[Object.keys(max)[0]] < list.OKX) {
             max = {
                 OKX: list.OKX
+            }
+        }
+        if (max[Object.keys(max)[0]] < list.BITMART) {
+            max = {
+                BITMART: list.BITMART
             }
         }
 
