@@ -7,7 +7,6 @@ const BITMART_URL = 'https://api-cloud.bitmart.com/spot/v1/ticker';
 
 
 const getDataBtn = document.querySelector('#getData');
-const calkDataBtn = document.querySelector('#calcData');
 const rootElem = document.querySelector('.root');
 
 let BINANCE_DATA = null;
@@ -26,10 +25,7 @@ let finalList = [];
 getDataBtn.addEventListener('click', () => {
     getData();
     rootElem.innerHTML = '';
-});
-
-calkDataBtn.addEventListener('click', () => {
-    start();
+    setTimeout(start, 7000)
 });
 
 function sendRequest(url) {
