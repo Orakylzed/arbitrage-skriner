@@ -3,13 +3,12 @@ const HUOBI_URL = 'https://api.huobi.pro/market/tickers';
 const MEXC_URL = 'https://www.mexc.com/open/api/v2/market/ticker';
 const GATE_URL = 'https://data.gateapi.io/api2/1/tickers';
 const OKX_URL = 'https://www.okx.com/api/v5/market/tickers?instType=SPOT';
-
-//BITMART
 const BITMART_URL = 'https://api-cloud.bitmart.com/spot/v1/ticker';
 
 
 const getDataBtn = document.querySelector('#getData');
 const calkDataBtn = document.querySelector('#calcData');
+const rootElem = document.querySelector('.root');
 
 let BINANCE_DATA = null;
 let HUOBI_DATA = null;
@@ -26,6 +25,7 @@ let finalList = [];
 
 getDataBtn.addEventListener('click', () => {
     getData();
+    rootElem.innerHTML = '';
 });
 
 calkDataBtn.addEventListener('click', () => {
@@ -62,12 +62,6 @@ sendRequest(OKX_URL).then( data => {OKX_DATA = okxDataNormalise(data.data); } )
 sendRequest(BITMART_URL).then( data => {BITMART_DATA = bitmartDataNormalise(data.data.tickers);} )
     .catch( (err) => console.log(err) );
 }
-
-
-
-
-
-
 
 function gateDataNormalise(data) {
     
@@ -170,8 +164,6 @@ function tokenAnalis() {
     tokenList.sort((a, b) => a > b ? 1 : -1);
     tokenList = tokenList.filter((it, index) => index === tokenList.indexOf(it = it.trim()));
 }
-
-
 
 function askPriceAnalise()  {
 
@@ -289,7 +281,7 @@ function finalListAnalise() {
             [tokenList[i]]: {
                 buy: askPrices[tokenList[i]],
                 sell: bidPrices[tokenList[i]],
-                profit: sellPrice / buyPrice * 100 - 100
+                profit: (sellPrice / buyPrice * 100 - 100) * 0.998
             }
         });
 
@@ -305,6 +297,42 @@ function finalListAnalise() {
     }
 }
 
+function showResult() {
+    rootElem.innerHTML = '';
+    let res = ``;
+    
+
+    for (let i = 0; i < finalList.length; i++) {
+        let coin = Object.keys(finalList[i])[0];
+        let buyObj = finalList[i][Object.keys(finalList[i])[0]].buy;
+        let buy = Object.keys(buyObj)[0];
+        let buyPrice = buyObj[buy];
+        let profit = String(finalList[i][Object.keys(finalList[i])[0]].profit).slice(0, 5);
+        let sellObj = finalList[i][Object.keys(finalList[i])[0]].sell;
+        let sell = Object.keys(sellObj)[0];
+        let sellPrice = sellObj[sell];
+
+        res += `
+            <div class="item">
+                <div class="coin-name">${coin}</div>
+                <div class="coin-info">
+                    <div class="buy">
+                        <div class="exchange">${buy}</div>
+                        <div class="price">${buyPrice}</div>
+                    </div>
+                    <div class="profit">${profit}</div>
+                    <div class="sell">
+                        <div class="exchange">${sell}</div>
+                        <div class="price">${sellPrice}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    rootElem.innerHTML = res;
+}
+
 
 
 
@@ -315,6 +343,7 @@ function start() {
     askPriceAnalise();
     bidPriceAnalise();
     finalListAnalise();
+    showResult();
 
     
     console.log(finalList);

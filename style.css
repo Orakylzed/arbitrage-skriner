@@ -5,5 +5,64 @@
 }
 
 body {
-    background-color: rgb(1, 28, 51);
+    background-color: rgb(22, 25, 49);
+}
+
+button {
+    margin-left: 100px;
+    margin-top: 20px;
+    height: 50px;
+    width: 150px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.root {
+    height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.item {
+    height: 100px;
+    width: 250px;
+    background-color: rgb(173, 243, 157);
+    display: flex;
+    margin: 5px;
+    font-family: Verdana, sans-serif;
+}
+
+.coin-name {
+    flex-basis: 50%;
+    font-size: 20px;
+}
+
+.coin-name {
+    display: flex;
+    justify-content: center;
+    line-height: 100px;
+}
+
+.coin-info {
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.exchange {
+    text-align: center;
+    font-size: 12px;
+}
+
+.profit {
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.price {
+    text-align: center;
+    font-size: 14px;
 }
