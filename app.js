@@ -106,6 +106,7 @@ function okxDataNormalise(data) {
 }
 
 function bitmartDataNormalise(data) {
+    console.log(data)
     let obj = new Object();
 
     for (let i = data.length - 1; i > -1; i--) {
@@ -123,6 +124,7 @@ function bitmartDataNormalise(data) {
         tokenList.push(coin);
     }
 
+    console.log(obj);
     return obj;
 }
 
@@ -222,9 +224,9 @@ function bidPriceAnalise()  {
             BINANCE: BINANCE_DATA[tokenList[i]] ? +BINANCE_DATA[tokenList[i]].bid : 0,
             HUOBI: HUOBI_DATA[tokenList[i]] ? +HUOBI_DATA[tokenList[i]].bid : 0,
             MEXC: MEXC_DATA[tokenList[i]] ? +MEXC_DATA[tokenList[i]].bid : 0,
-            GATE: GATE_DATA[tokenList[i]] ? +GATE_DATA[tokenList[i]].ask : 0,
-            OKX: OKX_DATA[tokenList[i]] ? +OKX_DATA[tokenList[i]].ask : 0,
-            BITMART: BITMART_DATA[tokenList[i]] ? +BITMART_DATA[tokenList[i]].ask : 0
+            GATE: GATE_DATA[tokenList[i]] ? +GATE_DATA[tokenList[i]].bid : 0,
+            OKX: OKX_DATA[tokenList[i]] ? +OKX_DATA[tokenList[i]].bid : 0,
+            BITMART: BITMART_DATA[tokenList[i]] ? +BITMART_DATA[tokenList[i]].bid : 0
         }
     }  
 
