@@ -1,9 +1,19 @@
 const BINANCE_URL = 'https://api1.binance.com/api/v3/ticker/24hr';
+
 const HUOBI_URL = 'https://api.huobi.pro/market/tickers';
+
 const MEXC_URL = 'https://www.mexc.com/open/api/v2/market/ticker';
+const MEXC_URLW = 'https://www.mexc.com/open/api/v2/market/coin/list';
+
 const GATE_URL = 'https://data.gateapi.io/api2/1/tickers';
+const GATE_URLW = 'https://data.gateapi.io/api2/1/coininfo';
+
 const OKX_URL = 'https://www.okx.com/api/v5/market/tickers?instType=SPOT';
+
 const BITMART_URL = 'https://api-cloud.bitmart.com/spot/v1/ticker';
+const BITMART_URLW = 'https://api-cloud.bitmart.com/spot/v1/currencies';
+
+
 
 
 const getDataBtn = document.querySelector('#getData');
@@ -12,9 +22,12 @@ const rootElem = document.querySelector('.root');
 let BINANCE_DATA = null;
 let HUOBI_DATA = null;
 let MEXC_DATA = null;
+let MEXC_DATA_WITHDRAW = null;
 let GATE_DATA = null;
+let GATE_DATA_WITHDRAW = null;
 let OKX_DATA = null;
 let BITMART_DATA = null;
+let BITMART_DATA_WITHDRAW = null;
 
 let tokenList = [];
 let positionList = [];
@@ -51,11 +64,17 @@ sendRequest(HUOBI_URL).then( data => {HUOBI_DATA = dataAnalis(data.data);} )
     .catch( (err) => console.log(err) );
 sendRequest(MEXC_URL).then( data => {MEXC_DATA = dataAnalis(data.data);} )
     .catch( (err) => console.log(err) );
+sendRequest(MEXC_URLW).then( data => {MEXC_DATA_WITHDRAW = mexcDataWithAnalise(data.data);} )
+    .catch( (err) => console.log(err) );
 sendRequest(GATE_URL).then( data => {GATE_DATA = gateDataNormalise(data);} )
+    .catch( (err) => console.log(err) );
+sendRequest(GATE_URLW).then( data => {GATE_DATA_WITHDRAW = gateDataWithAnalise(data.coins);} )
     .catch( (err) => console.log(err) );
 sendRequest(OKX_URL).then( data => {OKX_DATA = okxDataNormalise(data.data); } )
     .catch( (err) => console.log(err) );
 sendRequest(BITMART_URL).then( data => {BITMART_DATA = bitmartDataNormalise(data.data.tickers);} )
+    .catch( (err) => console.log(err) );
+sendRequest(BITMART_URLW).then( data => {BITMART_DATA_WITHDRAW = bitmartDataWithAnalise(data.data.currencies);} )
     .catch( (err) => console.log(err) );
 }
 
@@ -85,6 +104,20 @@ function gateDataNormalise(data) {
     return obj;
 }
 
+function gateDataWithAnalise(data) {
+    let obj = new Object();
+
+    for (let i = 0; i < data.length; i++) {
+        let coin = Object.keys(data[i])[0];
+        obj[coin] = {
+            canDep: !data[i][coin].deposit_disabled,
+            canWith: !data[i][coin].withdraw_disabled
+        }
+    }
+
+    return obj;
+}
+
 function okxDataNormalise(data) {
     let obj = new Object();
 
@@ -106,7 +139,7 @@ function okxDataNormalise(data) {
 }
 
 function bitmartDataNormalise(data) {
-    console.log(data)
+    
     let obj = new Object();
 
     for (let i = data.length - 1; i > -1; i--) {
@@ -124,7 +157,33 @@ function bitmartDataNormalise(data) {
         tokenList.push(coin);
     }
 
-    console.log(obj);
+    
+    return obj;
+}
+
+function bitmartDataWithAnalise(data) {
+    let obj = new Object();
+
+    for (let i = 0; i < data.length; i++) {
+        obj[data[i].id] = {
+            canDep: data[i].deposit_enabled,
+            canWith: data[i].withdraw_enabled
+        };
+    }
+
+    return obj;
+}
+
+function mexcDataWithAnalise(data) {
+    let obj = new Object();
+
+    for (let i = 0; i < data.length; i++) {
+        obj[data[i].currency] = {
+            canDep: data[i].coins[0].is_deposit_enabled,
+            canWith: data[i].coins[0].is_withdraw_enabled
+        };
+    }
+
     return obj;
 }
 
@@ -287,10 +346,41 @@ function finalListAnalise() {
 
     for (let i = finalList.length - 1; i>-1; i--) {
         let val = finalList[i][Object.keys(finalList[i])[0]].profit;
-        if (val < 1 || val > 100) {
+        if (val < 1 || val > 50) {
             finalList.splice(i, 1);
         } else if (finalList[i][Object.keys(finalList[i])[0]].buy.BINANCE === 0 || finalList[i][Object.keys(finalList[i])[0]].sell.BINANCE === 0) {
             finalList.splice(i, 1);
+        }
+    }
+
+    for (let i = finalList.length - 1; i > -1; i--) {
+        
+        let obj = finalList[i][Object.keys(finalList[i])].buy;
+        let coin = Object.keys(finalList[i])[0];
+        let ex = Object.keys(obj)[0];
+        
+
+        
+        if (ex == 'MEXC') {
+            if (!MEXC_DATA_WITHDRAW[coin].canWith) {
+                finalList.splice(i, 1);
+            } else if (!MEXC_DATA_WITHDRAW[coin].canDep) {
+                finalList.splice(i, 1);
+            }            
+        }
+        if (ex == 'GATE') {
+            if (!GATE_DATA_WITHDRAW[coin].canWith) {
+                finalList.splice(i, 1);
+            } else if (!GATE_DATA_WITHDRAW[coin].canDep) {
+                finalList.splice(i, 1);
+            }            
+        }
+        if (ex == 'BITMART') {
+            if (!BITMART_DATA_WITHDRAW[coin].canWith) {
+                finalList.splice(i, 1);
+            } else if (!BITMART_DATA_WITHDRAW[coin].canDep) {
+                finalList.splice(i, 1);
+            }            
         }
     }
 }
@@ -333,9 +423,6 @@ function showResult() {
 
 
 
-
-
-
 function start() {
     tokenAnalis();
     askPriceAnalise();
@@ -344,6 +431,5 @@ function start() {
     showResult();
 
     
-    console.log(finalList);
 }
 
