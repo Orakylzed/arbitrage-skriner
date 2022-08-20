@@ -27,7 +27,7 @@ button {
 .item {
     height: 100px;
     width: 250px;
-    background-color: rgb(173, 243, 157);
+    background-color: rgb(221, 243, 217);
     display: flex;
     margin: 5px;
     font-family: Verdana, sans-serif;
@@ -65,4 +65,14 @@ button {
 .price {
     text-align: center;
     font-size: 14px;
+}
+
+.buy {
+    color: rgb(14, 116, 5);
+    font-weight: 600;
+}
+
+.sell {
+    font-weight: 600;
+    color: rgb(182, 14, 14);
 }

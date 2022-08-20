@@ -346,7 +346,7 @@ function finalListAnalise() {
 
     for (let i = finalList.length - 1; i>-1; i--) {
         let val = finalList[i][Object.keys(finalList[i])[0]].profit;
-        if (val < 1 || val > 50) {
+        if (val < 1 || val > 10) {
             finalList.splice(i, 1);
         } else if (finalList[i][Object.keys(finalList[i])[0]].buy.BINANCE === 0 || finalList[i][Object.keys(finalList[i])[0]].sell.BINANCE === 0) {
             finalList.splice(i, 1);
@@ -408,7 +408,7 @@ function showResult() {
                         <div class="exchange">${buy}</div>
                         <div class="price">${buyPrice}</div>
                     </div>
-                    <div class="profit">${profit}</div>
+                    <div class="profit">${profit}%</div>
                     <div class="sell">
                         <div class="exchange">${sell}</div>
                         <div class="price">${sellPrice}</div>
