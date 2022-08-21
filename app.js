@@ -346,7 +346,7 @@ function finalListAnalise() {
 
     for (let i = finalList.length - 1; i>-1; i--) {
         let val = finalList[i][Object.keys(finalList[i])[0]].profit;
-        if (val < 1 || val > 10) {
+        if (val < 1 || val > 20) {
             finalList.splice(i, 1);
         } else if (finalList[i][Object.keys(finalList[i])[0]].buy.BINANCE === 0 || finalList[i][Object.keys(finalList[i])[0]].sell.BINANCE === 0) {
             finalList.splice(i, 1);
@@ -383,6 +383,30 @@ function finalListAnalise() {
             }            
         }
     }
+
+    finalList.sort((a, b) => a[Object.keys(a)].profit > b[Object.keys(b)].profit ? -1 : 1);    
+}
+
+function getLink(coin, ex) {
+
+    if (ex == 'BITMART') {
+        return `https://www.bitmart.com/trade/ru?layout=pro&symbol=${coin}_USDT`;
+    }
+    if (ex == 'GATE') {
+        return `https://www.gate.io/uk/trade/${coin}_USDT`;
+    }
+    if (ex == 'MEXC') {
+        return `https://www.mexc.com/exchange/${coin}_USDT`;
+    }
+    if (ex == 'HUOBI') {
+        return `https://www.huobi.com/uk-ua/exchange/${coin.toLowerCase()}_usdt`;
+    }
+    if (ex == 'OKX') {
+        return `https://www.okx.com/ua/trade-spot/${coin.toLowerCase()}-usdt`;
+    }
+    if (ex == 'BINANCE') {
+        return `https://www.binance.com/uk-UA/trade/${coin}_USDT?theme=dark&type=spot`;
+    }
 }
 
 function showResult() {
@@ -405,12 +429,12 @@ function showResult() {
                 <div class="coin-name">${coin}</div>
                 <div class="coin-info">
                     <div class="buy">
-                        <div class="exchange">${buy}</div>
+                        <div class="exchange"><a class="buy" href="${getLink(coin, buy)}">${buy}</a></div>
                         <div class="price">${buyPrice}</div>
                     </div>
                     <div class="profit">${profit}%</div>
                     <div class="sell">
-                        <div class="exchange">${sell}</div>
+                        <div class="exchange"><a class="sell" href="${getLink(coin, sell)}">${sell}</a></div>
                         <div class="price">${sellPrice}</div>
                     </div>
                 </div>

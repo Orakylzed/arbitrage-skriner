@@ -22,11 +22,12 @@ button {
     padding: 20px;
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-around;
 }
 
 .item {
-    height: 100px;
-    width: 250px;
+    height: 110px;
+    width: 24%;
     background-color: rgb(221, 243, 217);
     display: flex;
     margin: 5px;
@@ -54,12 +55,12 @@ button {
 
 .exchange {
     text-align: center;
-    font-size: 12px;
+    font-size: 14px;    
 }
 
 .profit {
     font-weight: 700;
-    font-size: 20px;
+    font-size: 22px;
 }
 
 .price {
@@ -75,4 +76,8 @@ button {
 .sell {
     font-weight: 600;
     color: rgb(182, 14, 14);
+}
+
+a {
+    text-decoration: none;
 }
