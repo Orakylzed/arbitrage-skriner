@@ -355,32 +355,40 @@ function finalListAnalise() {
 
     for (let i = finalList.length - 1; i > -1; i--) {
         
-        let obj = finalList[i][Object.keys(finalList[i])].buy;
         let coin = Object.keys(finalList[i])[0];
-        let ex = Object.keys(obj)[0];
+        let exBuy = Object.keys(finalList[i][Object.keys(finalList[i])].buy)[0];
+        let exSell = Object.keys(finalList[i][Object.keys(finalList[i])].sell)[0];
         
+        console.log(exBuy, exSell);
 
-        
-        if (ex == 'MEXC') {
+        if (exBuy == 'MEXC') {
             if (!MEXC_DATA_WITHDRAW[coin].canWith) {
+                finalList.splice(i, 1); 
+            }        
+        } else if (exSell == 'MEXC') {
+            if (!MEXC_DATA_WITHDRAW[coin].canDep) {
                 finalList.splice(i, 1);
-            } else if (!MEXC_DATA_WITHDRAW[coin].canDep) {
-                finalList.splice(i, 1);
-            }            
+            } 
         }
-        if (ex == 'GATE') {
+
+        if (exBuy == 'GATE') {
             if (!GATE_DATA_WITHDRAW[coin].canWith) {
+                finalList.splice(i, 1);   
+            }      
+        } else if (exSell == 'GATE') {
+            if (!GATE_DATA_WITHDRAW[coin].canDep) {
                 finalList.splice(i, 1);
-            } else if (!GATE_DATA_WITHDRAW[coin].canDep) {
-                finalList.splice(i, 1);
-            }            
+            } 
         }
-        if (ex == 'BITMART') {
+
+        if (exBuy == 'BITMART') {
             if (!BITMART_DATA_WITHDRAW[coin].canWith) {
+                finalList.splice(i, 1);   
+            }      
+        } else if (exSell == 'BITMART') {
+            if (!BITMART_DATA_WITHDRAW[coin].canDep) {
                 finalList.splice(i, 1);
-            } else if (!BITMART_DATA_WITHDRAW[coin].canDep) {
-                finalList.splice(i, 1);
-            }            
+            } 
         }
     }
 
@@ -456,4 +464,3 @@ function start() {
 
     
 }
-
