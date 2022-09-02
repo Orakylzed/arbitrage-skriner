@@ -16,8 +16,16 @@ const BITMART_URLW = 'https://api-cloud.bitmart.com/spot/v1/currencies';
 
 
 
+
+
 const getDataBtn = document.querySelector('#getData');
 const rootElem = document.querySelector('.root');
+const infoWrapper = document.querySelector('.info-wrapper');
+const priceCalkElem = document.querySelector('.priceForCalk');
+const profitCalkElem = document.querySelector('.rofitForCalk');
+const calkResultElem = document.querySelector('.calkResult');
+const feeInCoinElem = document.querySelector('#fee-in-coin');
+const calkMinButton = document.querySelector('#calkMin');
 
 let BINANCE_DATA = null;
 let HUOBI_DATA = null;
@@ -35,10 +43,47 @@ let askPrices = [];
 let bidPrices = [];
 let finalList = [];
 
+let priceForCalc = 0;
+let profitForCalc = 0;
+let feeInCoin = 0;
+
 getDataBtn.addEventListener('click', () => {
     getData();
     rootElem.innerHTML = '';
     setTimeout(start, 7000)
+});
+
+infoWrapper.addEventListener('click', (e) => {
+    if (e.target.classList.contains('info-wrapper')) {
+        e.target.classList.add('hide');
+    }
+});
+
+rootElem.addEventListener('click', (e) => {
+    if (e.target.classList.contains('info')) {
+        infoWrapper.classList.remove('hide');
+        
+    }
+});
+
+rootElem.addEventListener('click', (e) => {
+    if (e.target.classList.contains('sel')) {
+        let arr = document.querySelectorAll('.item');
+        for (el of arr) {
+            el.classList.remove('selected');
+        }
+        e.target.parentElement.parentElement.parentElement.classList.add('selected');
+        priceForCalc = e.target.getAttribute("data-price");
+        profitForCalc = e.target.getAttribute("data-profit");
+        priceCalkElem.innerHTML = priceForCalc;
+        profitCalkElem.innerHTML = profitForCalc;       
+    }
+});
+
+calkMinButton.addEventListener('click', () => {
+    feeInCoin = +feeInCoinElem.value;
+    let minVal = (feeInCoin * priceForCalc * 100) / profitForCalc;
+    calkResultElem.innerHTML = `fee in usdt: ${feeInCoin * priceForCalc}     min amount: ${minVal}`;
 });
 
 function sendRequest(url) {
@@ -77,6 +122,8 @@ sendRequest(BITMART_URL).then( data => {BITMART_DATA = bitmartDataNormalise(data
 sendRequest(BITMART_URLW).then( data => {BITMART_DATA_WITHDRAW = bitmartDataWithAnalise(data.data.currencies);} )
     .catch( (err) => console.log(err) );
 }
+
+
 
 function gateDataNormalise(data) {
     
@@ -237,6 +284,8 @@ function askPriceAnalise()  {
         }
     }  
 
+    console.log(arr);
+
     for (let i = 0; i < tokenList.length; i++) {
         let coin = tokenList[i];
         let list = arr[coin];
@@ -358,8 +407,6 @@ function finalListAnalise() {
         let coin = Object.keys(finalList[i])[0];
         let exBuy = Object.keys(finalList[i][Object.keys(finalList[i])].buy)[0];
         let exSell = Object.keys(finalList[i][Object.keys(finalList[i])].sell)[0];
-        
-        console.log(exBuy, exSell);
 
         if (exBuy == 'MEXC') {
             if (!MEXC_DATA_WITHDRAW[coin].canWith) {
@@ -434,15 +481,21 @@ function showResult() {
 
         res += `
             <div class="item">
-                <div class="coin-name">${coin}</div>
+                <div class="coin-name">
+                    <div class="control">
+                        <div class="butt sel" data-price="${buyPrice}" data-profit="${profit}">sel</div>
+                        <div  class="butt info">info</div>
+                    </div>
+                    <div class="name">${coin}</div>
+                </div>
                 <div class="coin-info">
                     <div class="buy">
-                        <div class="exchange"><a class="buy" href="${getLink(coin, buy)}">${buy}</a></div>
+                        <div class="exchange"><a target="_blank" class="buy" href="${getLink(coin, buy)}">${buy}</a></div>
                         <div class="price">${buyPrice}</div>
                     </div>
                     <div class="profit">${profit}%</div>
                     <div class="sell">
-                        <div class="exchange"><a class="sell" href="${getLink(coin, sell)}">${sell}</a></div>
+                        <div class="exchange"><a target="_blank" class="sell" href="${getLink(coin, sell)}">${sell}</a></div>
                         <div class="price">${sellPrice}</div>
                     </div>
                 </div>
@@ -451,6 +504,12 @@ function showResult() {
     }
 
     rootElem.innerHTML = res;
+}
+
+function showPrices(coin) {
+    let elem = document.querySelector('.info-tablet');
+    elem.innerHTML = 'DONE';
+    console.log(elem);
 }
 
 

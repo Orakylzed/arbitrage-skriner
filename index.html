@@ -8,9 +8,71 @@
     <title>Skriner</title>
 </head>
 <body>
-    
-    <button id="getData">Refresh Info</button>
+    <div class="header">
+        <button id="getData">Refresh Info</button>
+        <div class="calkMin">
+            <div class="priceForCalk">not select</div>
+            <div class="rofitForCalk">not select</div>
+        </div>
+        <input id="fee-in-coin" type="text">
+        <button id="calkMin">calk min</button>
+        <div class="calkResult">not info</div>
+    </div>
     <div class="root"></div>
+
+    <div class="info-wrapper hide">
+        <div class="wind">
+            <div class="info-header">
+                <div class="info-item">Prices</div>
+                <div class="info-item">Chains</div>
+            </div>
+            <div class="info-tablet">
+                <div class="info-line">
+                    <div class="info-item">
+                        Sell -> <br/> Buy 
+                    </div>
+                    <div class="info-item">
+                        <div class="info-ex">MEXC</div>
+                        <div class="info-price">28</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-ex">GATE</div>
+                        <div class="info-price">25</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-ex">HUOBI</div>
+                        <div class="info-price">26</div>
+                    </div>
+                </div>
+                <div class="info-line">
+                    <div class="info-item">
+                        <div class="info-ex">GATE</div>
+                        <div class="info-price">22</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-ex">GATE</div>
+                        <div class="info-price">22</div>
+                    </div>
+                </div>
+                <div class="info-line">
+                    <div class="info-item">
+                        <div class="info-ex">MEXC</div>
+                        <div class="info-price">24</div>
+                    </div>
+                </div>
+                <div class="info-line">
+                    <div class="info-item">
+                        <div class="info-ex">HUOBI</div>
+                        <div class="info-price">26</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-ex">MEXC</div>
+                        <div class="info-price">28</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="app.js"></script>
 </body>
