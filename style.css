@@ -6,11 +6,17 @@
 
 body {
     background-color: rgb(162, 162, 170);
+    padding-top: 60px;
 }
 
 .header {
     padding: 15px;
     display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgb(162, 162, 170);
+    width: 100%;
 }
 
 #getData {
@@ -19,6 +25,20 @@ body {
     width: 110px;
     background-color: white;
     cursor: pointer;
+}
+
+.calkMin {
+    margin: 0 20px;
+    font-size: 18px;
+}
+
+#calkMin {
+    margin: 0 20px;
+}
+
+.calkResult {
+    font-size: 22px;
+    line-height: 100%;
 }
 
 .root {

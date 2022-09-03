@@ -73,8 +73,8 @@ rootElem.addEventListener('click', (e) => {
             el.classList.remove('selected');
         }
         e.target.parentElement.parentElement.parentElement.classList.add('selected');
-        priceForCalc = e.target.getAttribute("data-price");
-        profitForCalc = e.target.getAttribute("data-profit");
+        priceForCalc = +e.target.getAttribute("data-price");
+        profitForCalc = +e.target.getAttribute("data-profit");
         priceCalkElem.innerHTML = priceForCalc;
         profitCalkElem.innerHTML = profitForCalc;       
     }
@@ -283,8 +283,6 @@ function askPriceAnalise()  {
             BITMART: BITMART_DATA[tokenList[i]] ? +BITMART_DATA[tokenList[i]].ask : 99999
         }
     }  
-
-    console.log(arr);
 
     for (let i = 0; i < tokenList.length; i++) {
         let coin = tokenList[i];
@@ -521,5 +519,4 @@ function start() {
     finalListAnalise();
     showResult();
 
-    
 }
